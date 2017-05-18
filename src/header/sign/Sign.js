@@ -5,7 +5,6 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import Tooltip from 'rc-tooltip';
 
 import 'whatwg-fetch';
 import API from '../../API';
