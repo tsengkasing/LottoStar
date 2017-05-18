@@ -18,3 +18,19 @@
 .header-menu-item:hover {
     text-shadow: 4px 4px 2px #66CCFF;
 }
+
+.header-logo {
+    display: flex;
+    align-items: center;
+}
+
+.header__bar {
+    padding: 16px 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.header__search__btn {
+    margin: 0 8px;
+}

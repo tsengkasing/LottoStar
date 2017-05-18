@@ -4,8 +4,10 @@ import { BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Auth from './Auth';
 import Header from './header/Header';
-
+import Footer from './footer/Footer';
+import Main from './main/Main';
 
 import './index.css';
 
@@ -14,7 +16,7 @@ injectTapEventPlugin();
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
-        true ? (
+        Auth.getLoginStatus() ? (
             <Component {...props}/>
         ) : (
             <Redirect to={{
@@ -26,7 +28,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 );
 
 const NotFound = () => (
-    <div className="not-found"><del>你来到了没有乐透星的寂寞之地</del><br/>滚</div>
+    <div className="not-found"><del>你来到了没有乐透星的寂寥之地</del><br/>滚</div>
 );
 
 class App extends React.Component {
@@ -55,11 +57,11 @@ class App extends React.Component {
                                     {/*<Route path="/sign" render={props => (*/}
                                         {/*<Sign {...props} success={this.handleRefreshStatus} />*/}
                                     {/*)}/>*/}
-                                    {/*<Route path="/billboard" component={Billboard}/>*/}
+                                    <Route exact path="/" component={Main}/>
                                     <Route component={NotFound}/>
                                 </Switch>
                             </div>
-                        {/*<Footer/>*/}
+                        <Footer/>
                     </div>
                 </MuiThemeProvider>
             </BrowserRouter>

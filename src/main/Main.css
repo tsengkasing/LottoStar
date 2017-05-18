@@ -1,0 +1,56 @@
+.main-hot__border {
+    width: 1024px;
+}
+
+.subHeader {
+    margin: 8px 0 16px 8px;
+    border-bottom: 2px solid #00f2fe;
+    font-size: 20px;
+    color: #666;
+    line-height: 28px;
+}
+
+.main-hot__items {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 16px;
+}
+
+.main-hot__item {
+    width: 230px;
+    border: 1px solid #e8e8e8;
+    padding: 8px;
+    overflow: hidden;
+}
+
+.main-hot__item:hover {
+    border: 1px solid #d2d2d2;
+}
+
+.item-pic {
+    padding: 20px;
+    width: 160px;
+    height: 160px;
+}
+
+.main-hot__item__info {
+    padding: 0 16px;
+    font-size: 12px;
+}
+
+.text-grey-color {
+    color: #808080;
+}
+
+.main-hot__item_progress__text {
+    font-size: 12px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.main-hot__item__btn {
+    text-align: center;
+    margin: 16px;
+}
+

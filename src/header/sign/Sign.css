@@ -1,0 +1,46 @@
+.sign-tab {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    transition: all .3s ease;
+    overflow: hidden;
+    height: 1px;
+}
+
+.activate {
+    height: 256px;
+}
+
+.sign-dialog {
+    max-width: 400px !important;
+}
+
+.sign-submit-btn {
+    width: 256px;
+}
+
+.sign-switch {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.sign-forget {
+    font-size: 14px;
+    cursor: default;
+}
+
+.sign-forget:hover:before {
+    content: '那你';
+}
+
+.sign-forget:hover:after {
+    content: '关我啥事';
+}
+
+.sign-bottom-line {
+    margin: 8px 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    width: 256px;
+}
