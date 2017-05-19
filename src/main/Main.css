@@ -1,56 +1,139 @@
+.main-layout-row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin: 0 0 16px;
+}
+
 .main-hot__border {
-    width: 1024px;
+    width: 906px;
 }
 
 .subHeader {
-    margin: 8px 0 16px 8px;
-    border-bottom: 2px solid #00f2fe;
+    margin: 0 0 16px 16px;
+    padding: 16px 0 0;
+    border-bottom: 2px solid #66CCFF;
     font-size: 20px;
     color: #666;
     line-height: 28px;
 }
 
-.main-hot__items {
+.main__items {
     display: flex;
     flex-flow: row wrap;
     margin: 16px;
 }
 
-.main-hot__item {
+.main__item {
+    width: 200px;
+    border: 1px solid #e8e8e8;
+    padding: 8px;
+    overflow: hidden;
+}
+
+.main__item--all {
     width: 230px;
     border: 1px solid #e8e8e8;
     padding: 8px;
     overflow: hidden;
 }
 
-.main-hot__item:hover {
+.main__item:hover {
     border: 1px solid #d2d2d2;
 }
 
 .item-pic {
-    padding: 20px;
-    width: 160px;
-    height: 160px;
+    padding: 18px 8px;
+    width: 180px;
+    /*height: 160px;*/
+
+    /*background-size: cover;*/
 }
 
-.main-hot__item__info {
+.main__item__info {
     padding: 0 16px;
     font-size: 12px;
 }
 
-.text-grey-color {
-    color: #808080;
+.text-p-min-margin {
+    margin: 8px 0;
 }
 
-.main-hot__item_progress__text {
+.main__item_progress__text {
     font-size: 12px;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
 }
 
-.main-hot__item__btn {
+.main__item__btn {
     text-align: center;
     margin: 16px;
 }
 
+
+
+
+/*latest*/
+.latest-lotto {
+    padding: 0;
+    width: 320px;
+}
+
+.latest-lotto-header {
+    /*background-color: #898989;*/
+    /*height: 36px;*/
+    /*line-height: 36px;*/
+    margin: 8px 8px 18px;
+    padding: 4px;
+
+    border-bottom: 2px solid #00f2fe;
+    font-size: 20px;
+    color: #666;
+}
+
+
+.latest-lotto-items {
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-bottom: 0;
+}
+
+
+.latest-lotto-item {
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 12px;
+    margin: 24px 16px;
+}
+
+.latest-lotto-item-pic {
+    padding: 0 8px 8px;
+    width: 64px;
+    height: 64px;
+}
+
+.latest-lotto-item-info {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0 8px;
+}
+
+.latest-lotto-item-info-separate {
+    margin: 8px 0 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.latest-lotto-footer {
+    margin: 0;
+    height: 50px;
+    background-color: #f5f5f5;
+    font-size: 14px;
+    line-height: 50px;
+    text-align: center;
+    color: #808080;
+    border: 1px solid #ddd;
+    border-top: 0;
+}

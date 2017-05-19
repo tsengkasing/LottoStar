@@ -8,6 +8,7 @@ import Auth from './Auth';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Main from './main/Main';
+import Home from './home/Home';
 
 import './index.css';
 
@@ -20,7 +21,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
             <Component {...props}/>
         ) : (
             <Redirect to={{
-                pathname: '/sign',
+                pathname: '/',
                 state: { from: props.location }
             }}/>
         )
@@ -58,6 +59,7 @@ class App extends React.Component {
                                         {/*<Sign {...props} success={this.handleRefreshStatus} />*/}
                                     {/*)}/>*/}
                                     <Route exact path="/" component={Main}/>
+                                    <PrivateRoute path="/home" component={Home} />
                                     <Route component={NotFound}/>
                                 </Switch>
                             </div>

@@ -1,0 +1,95 @@
+.home-layout {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.home__menu {
+    display: inline-block;
+    margin: 16px 8px;
+}
+
+.home__content {
+    margin: 16px 0;
+    width: 100%;
+
+    background-color: rgba(255, 255, 255, .5);
+
+    transition: all 0.5s ease-out;
+}
+
+.home__tab {
+    transition: all .3s ease;
+    overflow: auto;
+}
+
+.home__content--active {
+    height: 600px;
+    /*overflow: visible !important;*/
+}
+
+.home__content--deactive {
+    height: 0;
+}
+
+/*information*/
+.home__information {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    height: 80%;
+}
+
+.home__information th {
+    padding-right: 30px;
+    text-align: right;
+    font-size: 14px;
+    color: #898989;
+}
+
+.home__information td {
+    width: auto;
+    color: #3C3C3C;
+    padding: 12px 0;
+    font-size: 14px;
+}
+
+.home__information__content {
+    margin: 16px;
+}
+
+.home__avatar {
+    width: 140px;
+    height: 140px;
+}
+
+.home__record img {
+    width: 144px;
+    padding: 8px 16px 8px 0;
+}
+
+.home__record__info {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    font-size: 12px;
+}
+
+
+.home__message__item {
+    margin: 16px 0;
+    padding: 16px;
+    font-size: 12px;
+}
+
+.home__message__item__content {
+    padding: 0 8px;
+}
+
+.home__charge__field {
+    margin: 32px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}

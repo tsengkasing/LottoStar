@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
 import 'whatwg-fetch';
+
 import API from '../../API';
 import './Sign.css';
 

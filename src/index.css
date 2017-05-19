@@ -9,18 +9,40 @@ div {
 }
 
 .edge {
-    width: 1024px;
+    width: 1280px;
     margin: 0 auto;
+}
+
+.text-grey-color {
+    color: #808080;
 }
 
 .layout {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
+    background: url(http://message.bilibili.com/img/infocenterbg.jpg) center top no-repeat fixed #fff;
+}
+
+.background__mask--empty {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.background__mask {
+    background-color: rgba(255, 255, 255, .8);
+}
+
+.background__mask--half {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.background__mask--filled {
+    background-color: rgba(255, 255, 255, 1);
 }
 
 .content {
-    background-size: cover;
+    /*background-size: cover;*/
+
     /*background-color: #f6f9fa;*/
 }
 

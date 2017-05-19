@@ -4,6 +4,7 @@
 import React from 'react';
 
 import Popover from 'material-ui/Popover';
+import Paper from 'material-ui/Paper';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -58,15 +59,17 @@ export default class Header extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className="header-menu-container edge">
-                    <div style={{margin: 8, display: 'flex', alignItems: 'center'}}>欢迎来到乐透星！</div>
-                    <div className="header-menu-control">
-                        <div className="header-menu-item" onClick={() =>this.handleSign(true)}>请登录</div>
-                        <div className="header-menu-item" onClick={() =>this.handleSign(false)}>免费注册</div>
-                        <div className="header-menu-item" onClick={this.handleTouchTap}>我的乐透星</div>
+            <div className="header__background background__mask--half">
+                <Paper>
+                    <div className="header-menu-container edge">
+                        <div className="header-menu-welcome">欢迎来到乐透星！</div>
+                        <div className="header-menu-control">
+                            <div className="header-menu-item" style={{color: '#3399ff'}} onClick={() =>this.handleSign(true)}>请登录</div>
+                            <div className="header-menu-item" onClick={() =>this.handleSign(false)}>免费注册</div>
+                            <div className="header-menu-item" onClick={this.handleTouchTap}>我的乐透星</div>
+                        </div>
                     </div>
-                </div>
+                </Paper>
                 <div className="header__bar edge">
                     <div className="header-logo"><del>这是一个Logo</del></div>
                     <div className="header__search">
