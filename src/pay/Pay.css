@@ -1,0 +1,82 @@
+.pay__layout {
+    margin: 0 0 32px;
+}
+
+.pay__stepper {
+    width: 60%;
+    margin: 0 auto;
+    padding: 16px 0;
+}
+
+.pay__content {
+    /*min-height: 666px;*/
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.pay__tab {
+    overflow: hidden;
+    transition: all .3s ease;
+}
+
+.pay__tab--active {
+    height: 666px;
+}
+
+.pay__tab--deactive {
+    height: 0;
+}
+
+
+
+.pay__cart__info {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    font-size: 12px;
+}
+
+.pay__cart__info img {
+    width: 144px;
+    padding: 8px 16px 8px 0;
+}
+
+.pay__cart__table__footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px;
+}
+
+.pay__operation {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.pay__cart__hint {
+    margin: 8px 0;
+    color: #808080;
+    font-size: 13px;
+}
+
+.pay__pay {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+.pay__input__password {
+    margin: 32px;
+    display: flex;
+    align-items: center;
+}
+
+.vertical__center {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}

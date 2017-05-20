@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 
 import 'whatwg-fetch';
 
+import Auth from '../../Auth';
 import API from '../../API';
 import './Sign.css';
 
@@ -85,6 +86,15 @@ export default class Sign extends React.Component {
         let password = this.state.signin_password;
         let valid = true;
 
+        //测试用
+        if(phone_number === '233') {
+            Auth.storeUserInfo({username: '233'});
+            this.props.success();
+            this.handleClose();
+            return;
+        }
+
+
         if(!phone_number || phone_number === '') {
             this.setState({
                 signin_phone_number_error: '手机号码不能为空！'
@@ -106,11 +116,12 @@ export default class Sign extends React.Component {
         if(!valid) return;
 
 
+        const request_data = {username: phone_number, password: password};
         fetch(API.SignIn, {
             method: 'POST',
             redirect: 'manual',
             cache: 'no-cache',
-            body: JSON.stringify({username: phone_number, password: password}),
+            body: JSON.stringify(request_data),
             headers: new Headers({
                 'Content-Type': 'application/json',
                 'dataType': 'json'
@@ -123,6 +134,7 @@ export default class Sign extends React.Component {
                 console.error('服务器故障~');
             else {
                 //登录成功
+                Auth.storeUserInfo(request_data);
             }
         }).catch((e) => {
             console.error('登录失败！');

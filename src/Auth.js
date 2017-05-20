@@ -13,7 +13,7 @@ export default class Auth {
             try {
                 user_info = JSON.parse(user_info);
                 if(user_info.username) {
-                    user_info.toLogin = false;
+                    user_info.to_login = false;
                     return user_info;
                 }
             }catch (e) {
@@ -22,14 +22,14 @@ export default class Auth {
         }
         //用户信息不存在或者解析错误
         let username = window.localStorage.getItem(STORE);
-        if (username) return {username: username, toLogin: true};
+        if (username) return {username: username, to_login: true};
         return '';
     }
 
     static getLoginStatus() {
-        return true;
+        // return true;
         let info = Auth.getUserInfo();
-        return info && typeof info === 'object' && !info.toLogin;
+        return info && typeof info === 'object' && !info.to_login;
     }
 
     static storeUserInfo(info) {

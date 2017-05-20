@@ -9,6 +9,8 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import Main from './main/Main';
 import Home from './home/Home';
+import Ware from './ware/Ware';
+import Pay from './pay/Pay';
 
 import './index.css';
 
@@ -59,7 +61,9 @@ class App extends React.Component {
                                         {/*<Sign {...props} success={this.handleRefreshStatus} />*/}
                                     {/*)}/>*/}
                                     <Route exact path="/" component={Main}/>
+                                    <Route exact path="/ware/:id" component={Ware}/>
                                     <PrivateRoute path="/home" component={Home} />
+                                    <PrivateRoute path="/pay" component={Pay} />
                                     <Route component={NotFound}/>
                                 </Switch>
                             </div>

@@ -6,7 +6,7 @@
 }
 
 .main-hot__border {
-    width: 906px;
+    width: 930px;
 }
 
 .subHeader {
@@ -45,9 +45,6 @@
 .item-pic {
     padding: 18px 8px;
     width: 180px;
-    /*height: 160px;*/
-
-    /*background-size: cover;*/
 }
 
 .main__item__info {
@@ -81,9 +78,6 @@
 }
 
 .latest-lotto-header {
-    /*background-color: #898989;*/
-    /*height: 36px;*/
-    /*line-height: 36px;*/
     margin: 8px 8px 18px;
     padding: 4px;
 
