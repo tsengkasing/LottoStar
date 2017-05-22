@@ -6,7 +6,13 @@
 }
 
 .main-hot__border {
-    width: 930px;
+    max-width: 930px;
+    min-width: 600px;
+}
+
+.main-all {
+    /*max-width: 930px;*/
+    min-width: 830px;
 }
 
 .subHeader {
@@ -38,8 +44,9 @@
     overflow: hidden;
 }
 
-.main__item:hover {
-    border: 1px solid #d2d2d2;
+.main__item:hover, .main__item--all:hover {
+    padding: 7px;
+    border: 2px solid #66CCFF;
 }
 
 .item-pic {
@@ -91,14 +98,22 @@
     overflow: hidden;
     border: 1px solid #ddd;
     border-bottom: 0;
+    max-height: 692px;
+    transition: all .3s ease;
 }
 
 
 .latest-lotto-item {
+    transition: all .3s ease;
     display: flex;
     flex-flow: row nowrap;
     font-size: 12px;
-    margin: 24px 16px;
+    margin: 6px 8px;
+    padding: 10px 8px;
+}
+
+.latest-lotto-item:hover {
+    box-shadow: rgba(0, 0, 0, 0.19) 0 10px 30px, rgba(0, 0, 0, 0.23) 0 6px 10px;
 }
 
 .latest-lotto-item-pic {

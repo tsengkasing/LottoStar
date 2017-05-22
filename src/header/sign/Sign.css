@@ -11,6 +11,10 @@
     height: 256px;
 }
 
+.register--activate {
+    height: 450px;
+}
+
 .sign-dialog {
     max-width: 400px !important;
 }

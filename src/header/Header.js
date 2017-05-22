@@ -26,7 +26,7 @@ export default class Header extends React.Component {
             to_login: true,
 
             redirect: null,
-        }
+        };
     }
 
     handleUpdateInput = (value) => {
@@ -54,9 +54,10 @@ export default class Header extends React.Component {
 
     handleRefreshStatus = () => {
         let user_info = Auth.getUserInfo();
+        let to_login = user_info.to_login;
         this.setState({
-            username: typeof user_info === 'object' ? user_info.username : 'nobody',
-            to_login: typeof user_info === 'object' ? user_info.to_login : true,
+            username: to_login ? 'nobody' : user_info.username,
+            to_login: to_login,
         })
     };
 

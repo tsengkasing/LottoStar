@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "material-ui": "^0.18.1",
+    "qiniu-js": "^1.0.19",
     "rc-tooltip": "^3.4.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
@@ -19,5 +20,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://novemser.vicp.io:523/"
 }

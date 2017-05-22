@@ -9,6 +9,8 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    margin: 0;
+    width: 100%;
 }
 
 .footer-left {
@@ -18,6 +20,16 @@
 
 .footer-left-tips {
     margin: 16px;
+}
+
+.footer-left-tips li:hover:before {
+    content: '看';
+    color: #000;
+}
+
+.footer-left-tips li:hover:after {
+    content: '没用';
+    color: #000;
 }
 
 .footer-left-tips-title {

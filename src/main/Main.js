@@ -7,8 +7,21 @@ import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 
 import Auth from '../Auth';
+import API from '../API';
 import TipsDialog from '../TipsDialog';
 import './Main.css';
+
+let items = [];
+for(let i = 0; i < 20; i++) {
+    items.push({
+        user_avatar_url: 'http://img.everstar.xyz/everstar.jpg',
+        user_name: 'everstar',
+        date: '2017-05-19',
+        ware_name: 'Novemser 个人写真' + Math.random().toFixed(2),
+        current_paid_user_count: (Math.random() * 100).toFixed(0),
+        max_payable_user_count: (Math.random() * 10000).toFixed(0)
+    });
+}
 
 export default class Main extends React.Component {
 
@@ -25,14 +38,7 @@ export default class Main extends React.Component {
                 current_paid_user_count: 939,
             }),
 
-            lotto_items: new Array(7).fill({
-                user_avatar_url: 'http://img.everstar.xyz/everstar.jpg',
-                user_name: 'everstar',
-                date: '2017-05-19',
-                ware_name: 'Novemser 个人写真',
-                current_paid_user_count: 6,
-                max_payable_user_count: 2900
-            }),
+            lotto_items: items,
 
             all_items: new Array(10).fill({
                 ware_id: 2,
@@ -43,6 +49,37 @@ export default class Main extends React.Component {
             })
         }
     }
+
+    handleLoadWares = () => {
+        fetch(API.Ware, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json',
+                'Authorization': 'Bearer ' + API.AccessToken
+            })
+        }).then((response) => {
+            if(response.status === 200) return response.json();
+            else return {__status: response.status};
+        }).then((data) => {
+            if(data && data.__status) {
+                if(data.__status === 401) {
+                    API.refreshToken(()=>{
+                        this.refs['dialog'].handleOpen('失败', '请重试');
+                    });
+                }else if(data.__status >= 500) {
+                    console.error('服务器故障~');
+                }
+            }
+            else {
+                //加载成功
+                console.log(data);
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！');
+        });
+    };
 
     handleLotto = (ware_id) => {
         //加到购物车
@@ -63,6 +100,17 @@ export default class Main extends React.Component {
         }
         this.setState({ redirect });
     };
+
+    componentWillMount() {
+        this.handleLoadWares();
+
+        setInterval(()=>{
+            let lotto_items = this.state.lotto_items;
+            lotto_items = lotto_items.slice(1).concat(lotto_items.slice(0, 1));
+            this.setState({lotto_items});
+            console.log('...');
+        }, 1000);
+    }
 
     render() {
         return (

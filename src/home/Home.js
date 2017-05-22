@@ -21,6 +21,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 
+import UploadAvatar from './UploadAvatar';
 import TipsDialog from '../TipsDialog';
 import './Home.css';
 
@@ -157,7 +158,8 @@ export default class Home extends React.Component {
                                     <tbody>
                                         <tr>
                                             <th>头像</th>
-                                            <td><img className="home__avatar" src={this.state.user_info.avatar_url} alt="头像" /></td>
+                                            <td><img className="home__avatar" onClick={()=>this.refs['avatar'].handleOpen()}
+                                                     src={this.state.user_info.avatar_url} alt="头像" /></td>
                                         </tr>
                                         <tr>
                                             <th>昵称</th>
@@ -320,6 +322,7 @@ export default class Home extends React.Component {
                     </Paper>
                 </div>
                 <TipsDialog ref="tips" />
+                <UploadAvatar ref="avatar" />
             </div>
         );
     }

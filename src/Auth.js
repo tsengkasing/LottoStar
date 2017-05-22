@@ -23,7 +23,7 @@ export default class Auth {
         //用户信息不存在或者解析错误
         let username = window.localStorage.getItem(STORE);
         if (username) return {username: username, to_login: true};
-        return '';
+        return {to_login: true};
     }
 
     static getLoginStatus() {

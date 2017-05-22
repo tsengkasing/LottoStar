@@ -5,6 +5,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Auth from './Auth';
+import API from './API';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Main from './main/Main';
@@ -41,7 +42,11 @@ class App extends React.Component {
         this.state = {
             name: null,
             toLogin: true
-        }
+        };
+
+        const _info = Auth.getUserInfo();
+        API.AccessToken = _info.access_token;
+        API.RefreshToken = _info.refresh_token;
     }
 
     handleRefreshStatus = () => {
