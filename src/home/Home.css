@@ -59,9 +59,36 @@
     margin: 16px;
 }
 
-.home__avatar {
+.home__avatar__hide {
     width: 140px;
     height: 140px;
+    position: absolute;
+    z-index: 999;
+    background-color: black;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.home__avatar__hide span {
+    opacity: 1;
+    color: white;
+}
+
+.home__avatar__hide:hover {
+    opacity: 0.5;
+}
+
+.home__avatar {
+    /*width: 140px;*/
+    /*height: 140px;*/
+
+    min-width: 140px;
+    min-height: 140px;
+    max-height: 300px;
+    max-width: 300px;
 }
 
 .home__record img {
@@ -108,5 +135,12 @@
     margin: 32px;
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
+}
+
+.image__select {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
     align-items: center;
 }

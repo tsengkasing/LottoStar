@@ -15,6 +15,11 @@
     flex-flow: row nowrap;
 }
 
+.link {
+    text-decoration: none;
+    color: black;
+}
+
 .header-menu-item {
     cursor: pointer;
     margin: 0 10px;
@@ -41,10 +46,11 @@
 }
 
 .header__bar {
-    padding: 16px 0;
+    padding: 4px 0;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    align-items: center;
 }
 
 .header__search__btn {

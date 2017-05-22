@@ -13,13 +13,14 @@ import './Main.css';
 
 let items = [];
 for(let i = 0; i < 20; i++) {
+    let ran = Math.random();
     items.push({
-        user_avatar_url: 'http://img.everstar.xyz/everstar.jpg',
+        user_avatar_url: `http://img.everstar.xyz/${ran > 0.5 ? 'everstar.jpg' : 'novemser.jpg'}` ,
         user_name: 'everstar',
         date: '2017-05-19',
-        ware_name: 'Novemser 个人写真' + Math.random().toFixed(2),
-        current_paid_user_count: (Math.random() * 100).toFixed(0),
-        max_payable_user_count: (Math.random() * 10000).toFixed(0)
+        ware_name: 'Novemser 个人写真' + ran.toFixed(2),
+        current_paid_user_count: (ran * 100).toFixed(0),
+        max_payable_user_count: (ran * 10000).toFixed(0)
     });
 }
 
@@ -65,8 +66,12 @@ export default class Main extends React.Component {
         }).then((data) => {
             if(data && data.__status) {
                 if(data.__status === 401) {
-                    API.refreshToken(()=>{
-                        this.refs['dialog'].handleOpen('失败', '请重试');
+                    API.refreshToken((err)=>{
+                        if(err) {
+                            window.__clear();
+                            this.refs['dialog'].handleOpen('失败', err);
+                        }
+                        else this.refs['dialog'].handleOpen('失败', '请重试');
                     });
                 }else if(data.__status >= 500) {
                     console.error('服务器故障~');
@@ -104,12 +109,16 @@ export default class Main extends React.Component {
     componentWillMount() {
         this.handleLoadWares();
 
-        setInterval(()=>{
+        window.__timer = setInterval(()=>{
             let lotto_items = this.state.lotto_items;
             lotto_items = lotto_items.slice(1).concat(lotto_items.slice(0, 1));
             this.setState({lotto_items});
             console.log('...');
-        }, 1000);
+        }, 3000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(window.__timer);
     }
 
     render() {

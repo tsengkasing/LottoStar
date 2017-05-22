@@ -15,6 +15,8 @@ export default class API {
     static Token = prefix + '/token';
     static Register = prefix + '/Account/Register';
 
+    static UserInfo = prefix + '/account/';
+
 
     //商品
     static Ware = prefix + '/ware';
@@ -35,15 +37,19 @@ export default class API {
             if(response.status === 200) return response.json();
             else return {__status: response.status};
         }).then((data) => {
-            if(data.__status && data.__status > 200)
-                console.error('服务器故障~');
+            if(data.__status) {
+                if(data.__status >= 500) {
+                    console.error('服务器故障~');
+                }else if(data.__status === 400) {
+                    cb && cb('登录状态已过期，请重新登录');
+                }
+            }
             else {
-                console.log(data);
                 //更新token成功
                 API.AccessToken = data.access_token;
                 API.RefreshToken = data.refresh_token;
                 Auth.storeUserInfo(Object.assign(Auth.getUserInfo(), data));
-                cb && cb();
+                cb && cb(null);
             }
         }).catch((e) => {
             console.error('更新Token失败！');

@@ -60,18 +60,18 @@ class App extends React.Component {
                 <MuiThemeProvider>
                     <div className="layout">
                         <Header info={{name: this.state.name, toLogin: this.state.toLogin}} success={this.handleRefreshStatus} />
-                            <div className="edge content">
-                                <Switch>
-                                    {/*<Route path="/sign" render={props => (*/}
-                                        {/*<Sign {...props} success={this.handleRefreshStatus} />*/}
-                                    {/*)}/>*/}
-                                    <Route exact path="/" component={Main}/>
-                                    <Route exact path="/ware/:id" component={Ware}/>
-                                    <PrivateRoute path="/home" component={Home} />
-                                    <PrivateRoute path="/pay" component={Pay} />
-                                    <Route component={NotFound}/>
-                                </Switch>
-                            </div>
+                        <div className="edge content">
+                            <Switch>
+                                {/*<Route path="/sign" render={props => (*/}
+                                    {/*<Sign {...props} success={this.handleRefreshStatus} />*/}
+                                {/*)}/>*/}
+                                <Route exact path="/" component={Main}/>
+                                <Route exact path="/ware/:id" component={Ware}/>
+                                <PrivateRoute path="/home" component={Home} />
+                                <PrivateRoute path="/pay" component={Pay} />
+                                <Route component={NotFound}/>
+                            </Switch>
+                        </div>
                         <Footer/>
                     </div>
                 </MuiThemeProvider>

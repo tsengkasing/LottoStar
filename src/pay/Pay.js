@@ -30,9 +30,6 @@ const mock = [{
     img_url: 'http://img.everstar.xyz/s/novemser.jpg',
     current_paid_user_count: 2107,
     max_payable_user_count: 2990,
-    user_paid_price: 666,
-    status: '正在进行',
-    time: '2017-05-19',
 
     price: 12000,
     unit_price: 2,
@@ -42,9 +39,6 @@ const mock = [{
     img_url: 'http://img.everstar.xyz/s/novemser.jpg',
     current_paid_user_count: 2107,
     max_payable_user_count: 2990,
-    user_paid_price: 666,
-    status: '正在进行',
-    time: '2017-05-19',
 
     price: 12000,
     unit_price: 2,

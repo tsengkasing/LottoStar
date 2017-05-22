@@ -23,8 +23,9 @@ import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 
 import UploadAvatar from './UploadAvatar';
 import TipsDialog from '../TipsDialog';
+import Auth from '../Auth';
 import './Home.css';
-
+import HomeInfoGetter from './HomeInfoGetter';
 
 //mock
 const _message = [
@@ -70,8 +71,8 @@ export default class Home extends React.Component {
             user_info: {
                 avatar_url: 'http://img.everstar.xyz/everstar.jpg',
                 nick_name: 'Everstar',
-                Id: '0001',
-                phone_number: '18200000000',
+                iduser_account: '0001',
+                tel_num: '18200000000',
                 balance: 233
             },
 
@@ -129,6 +130,16 @@ export default class Home extends React.Component {
         this.refs['tips'].handleOpen('充值成功！', `成功充值￥${amount}`, () => {});
     };
 
+    loadUserInfo = () => {
+        HomeInfoGetter.getUserInfo(Auth.getUserInfo().username).then((info)=>{
+            this.setState({user_info: info})
+        });
+    };
+
+    componentWillMount() {
+        this.loadUserInfo();
+    }
+
     render() {
         return (
             <div className="home-layout edge">
@@ -158,7 +169,12 @@ export default class Home extends React.Component {
                                     <tbody>
                                         <tr>
                                             <th>头像</th>
-                                            <td><img className="home__avatar" onClick={()=>this.refs['avatar'].handleOpen()}
+                                            <td><div className="home__avatar__hide"
+                                                     onClick={()=>{
+                                                         this.refs['avatar'].handleOpen(this.state.user_info.iduser_account,
+                                                             this.loadUserInfo)
+                                                     }}><span>更换头像</span></div>
+                                                <img className="home__avatar"
                                                      src={this.state.user_info.avatar_url} alt="头像" /></td>
                                         </tr>
                                         <tr>
@@ -167,11 +183,11 @@ export default class Home extends React.Component {
                                         </tr>
                                         <tr>
                                             <th>ID</th>
-                                            <td>{this.state.user_info.Id}</td>
+                                            <td>{this.state.user_info.iduser_account}</td>
                                         </tr>
                                         <tr>
                                             <th>手机号</th>
-                                            <td>{this.state.user_info.phone_number}</td>
+                                            <td>{this.state.user_info.tel_num}</td>
                                         </tr>
                                         <tr>
                                             <th>余额</th>
