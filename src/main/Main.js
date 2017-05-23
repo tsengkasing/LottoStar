@@ -131,7 +131,7 @@ export default class Main extends React.Component {
                             {this.state.hot_items.map((item, index)=>(
                                 <div className="main__item" key={index}>
                                     <div style={{textAlign: 'center'}} onClick={() => this.handleRedirect(1, item.ware_id)}>
-                                        <img className="item-pic" src={item.img_url} />
+                                        <img className="item-pic" src={item.img_url} alt="" />
                                     </div>
                                     <div className="main__item__info" onClick={() => this.handleRedirect(1, item.ware_id)}>
                                         <p style={{lineHeight: '26px', margin: 0}}>{item.ware_name}</p>

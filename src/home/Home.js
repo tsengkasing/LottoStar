@@ -15,7 +15,6 @@ import ActionInfo from 'material-ui/svg-icons/action/info';
 import {List, ListItem} from 'material-ui/List';
 import Badge from 'material-ui/Badge';
 import LinearProgress from 'material-ui/LinearProgress';
-import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';

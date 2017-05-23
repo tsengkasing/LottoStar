@@ -7,7 +7,7 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-    margin: 16px 0;
+    margin: 8px 0;
     padding: 16px 32px;
 }
 
@@ -17,6 +17,24 @@
 
 .manage__row__column {
     text-align: center !important;
+}
+
+.manage__add__btn {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 32px;
+}
+
+.manage__add__border {
+    transition: all .4s ease;
+    margin: 16px 0;
+    padding: 0 32px;
+    overflow: hidden;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .manage__delete--animated {

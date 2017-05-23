@@ -5,7 +5,6 @@ import React from 'react';
 import { Link  } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
 import AutoComplete from 'material-ui/AutoComplete';
-import RaisedButton from 'material-ui/RaisedButton';
 
 import Sign from './sign/Sign';
 import Auth from '../Auth';
@@ -81,14 +80,17 @@ export default class Header extends React.Component {
                     </div>
                 </Paper>
                 <div className="header__bar edge">
-                    <div className="header-logo"><Link className="link" to="/"><img src={logo} style={{width: 64}} /></Link></div>
+                    <div className="header-logo">
+                        <Link className="link" to="/" style={{display: 'flex', alignItems: 'center'}}>
+                            <img src={logo} style={{width: 64}} alt="logo" />&nbsp;&nbsp;&nbsp;&nbsp;<span>Lotto Star</span>
+                        </Link>
+                    </div>
                     <div className="header__search">
                         <AutoComplete
                             hintText="请输入要搜索的商品"
                             dataSource={this.state.data_source}
                             onUpdateInput={this.handleUpdateInput}
                         />
-                        {/*<RaisedButton label="搜索" primary={true} className="header__search__btn"/>*/}
                     </div>
                 </div>
                 <Sign ref="sign" success={this.handleRefreshStatus} />

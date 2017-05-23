@@ -59,7 +59,7 @@ class App extends React.Component {
             <BrowserRouter>
                 <MuiThemeProvider>
                     <div className="layout">
-                        {/*<Header info={{name: this.state.name, toLogin: this.state.toLogin}} success={this.handleRefreshStatus} />*/}
+                        <Header info={{name: this.state.name, toLogin: this.state.toLogin}} success={this.handleRefreshStatus} />
                         <div className="edge content">
                             <Switch>
                                 {/*<Route path="/sign" render={props => (*/}
