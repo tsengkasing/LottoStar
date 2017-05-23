@@ -14,7 +14,7 @@ import Ware from './ware/Ware';
 import Pay from './pay/Pay';
 
 import './index.css';
-
+import Manage from './manage/Manage';
 
 injectTapEventPlugin();
 
@@ -59,12 +59,13 @@ class App extends React.Component {
             <BrowserRouter>
                 <MuiThemeProvider>
                     <div className="layout">
-                        <Header info={{name: this.state.name, toLogin: this.state.toLogin}} success={this.handleRefreshStatus} />
+                        {/*<Header info={{name: this.state.name, toLogin: this.state.toLogin}} success={this.handleRefreshStatus} />*/}
                         <div className="edge content">
                             <Switch>
                                 {/*<Route path="/sign" render={props => (*/}
                                     {/*<Sign {...props} success={this.handleRefreshStatus} />*/}
                                 {/*)}/>*/}
+                                <Route path="/manage" component={Manage} />
                                 <Route exact path="/" component={Main}/>
                                 <Route exact path="/ware/:id" component={Ware}/>
                                 <PrivateRoute path="/home" component={Home} />
