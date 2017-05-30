@@ -129,7 +129,7 @@ export default class Main extends React.Component {
                         <div className="subHeader">最热商品</div>
                         <div className="main__items">
                             {this.state.hot_items.map((item, index)=>(
-                                <div className="main__item" key={index}>
+                                <div className="main__item main__item__ware" key={index}>
                                     <div style={{textAlign: 'center'}} onClick={() => this.handleRedirect(1, item.ware_id)}>
                                         <img className="item-pic" src={item.img_url} alt="" />
                                     </div>
@@ -186,7 +186,7 @@ export default class Main extends React.Component {
                     <div className="subHeader">所有商品</div>
                     <div className="main__items">
                         {this.state.all_items.map((item, index)=>(
-                            <div className="main__item--all" key={index}>
+                            <div className="main__item--all main__item__ware" key={index}>
                                 <div style={{textAlign: 'center'}} onClick={() => this.handleRedirect(1, item.ware_id)}>
                                     <img className="item-pic" src={item.img_url} alt="商品图片" />
                                 </div>

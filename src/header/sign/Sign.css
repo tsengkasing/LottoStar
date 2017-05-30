@@ -2,17 +2,18 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+    justify-content: center;
     transition: all .3s ease;
     overflow: hidden;
-    height: 1px;
+    height: 0;
 }
 
 .activate {
-    height: 256px;
+    height: 360px;
 }
 
 .register--activate {
-    height: 450px;
+    height: 440px;
 }
 
 .sign-dialog {

@@ -142,17 +142,18 @@ export default class Sign extends React.Component {
             else return {__status: response.status};
         }).then((data) => {
             if(data && data.__status) {
-                if(data.__status >= 400) {
-                    this.setState({
-                        signin_password_error: '密码错误！'
-                    });
-                }else if (data.__status >= 500) {
+                if(data.__status >= 500) {
                     console.error('服务器故障~');
+                    this.refs['dialog'].handleOpen('服务器出错', '请稍后再试');
+                }else if (data.__status >= 400) {
+                    this.setState({ signin_password_error: '密码错误！' });
                 }
             }
             else {
                 //登录成功
                 Auth.storeUserInfo(Object.assign({username: username, password: password}, data));
+                API.AccessToken = data.access_token;
+                API.RefreshToken = data.refresh_token;
                 this.props.success();
                 this.handleClose();
             }

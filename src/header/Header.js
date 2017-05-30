@@ -67,27 +67,32 @@ export default class Header extends React.Component {
 
     render() {
         return (
-            <div className="header__background background__mask">
+            <div className="header__background">
                 <Paper>
                     <div className="header-menu-container edge">
                         <div className="header-menu-welcome"><Link className="link" to="/">欢迎来到乐透星！</Link></div>
                         <div className="header-menu-control">
-                            {this.state.to_login ? <div className="header-menu-item" style={{color: '#3399ff'}} onClick={() =>this.handleSign(true)}>请登录</div> : null}
-                            {this.state.to_login ? <div className="header-menu-item" onClick={() =>this.handleSign(false)}>免费注册</div> : null}
-                            {this.state.to_login ? null : <div className="header-menu-item"><Link className="link" to="/home">{this.state.username}</Link></div>}
-                            {this.state.to_login ? null : <div className="header-menu-item" onClick={this.handleSignOut}>注销</div>}
+                            {this.state.to_login ? <div className="header-menu-item" style={{color: '#3399ff'}}
+                                                        onClick={() =>this.handleSign(true)}>请登录</div> : null}
+                            {this.state.to_login ? <div className="header-menu-item"
+                                                        onClick={() =>this.handleSign(false)}>免费注册</div> : null}
+                            {this.state.to_login ? null : <div className="header-menu-item">
+                                <Link className="link" to="/home">{this.state.username}</Link></div>}
+                            {this.state.to_login ? null : <div className="header-menu-item"
+                                                               onClick={this.handleSignOut}>注销</div>}
                         </div>
                     </div>
                 </Paper>
                 <div className="header__bar edge">
                     <div className="header-logo">
                         <Link className="link" to="/" style={{display: 'flex', alignItems: 'center'}}>
-                            <img src={logo} style={{width: 64}} alt="logo" />&nbsp;&nbsp;&nbsp;&nbsp;<span>Lotto Star</span>
+                            <img src={logo} style={{width: 64}} alt="logo" />&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style={{color: 'white', fontSize: 24}}>Lotto Star</span>
                         </Link>
                     </div>
                     <div className="header__search">
                         <AutoComplete
-                            hintText="请输入要搜索的商品"
+                            hintText={<span style={{color: 'rgba(255, 255, 255, 0.3)'}}>请输入要搜索的商品</span>}
                             dataSource={this.state.data_source}
                             onUpdateInput={this.handleUpdateInput}
                         />

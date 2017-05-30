@@ -37,6 +37,10 @@
     overflow: hidden;
 }
 
+.main__item__ware:hover {
+    animation: tada 0.8s both;
+}
+
 .main__item--all {
     width: 230px;
     border: 1px solid #e8e8e8;
@@ -145,4 +149,26 @@
     color: #808080;
     border: 1px solid #ddd;
     border-top: 0;
+}
+
+@keyframes tada {
+    from {
+        transform: scale3d(1, 1, 1);
+    }
+
+    10%, 20% {
+        transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg);
+    }
+
+    30%, 50%, 70%, 90% {
+        transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+    }
+
+    40%, 60%, 80% {
+        transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+    }
+
+    to {
+        transform: scale3d(1, 1, 1);
+    }
 }

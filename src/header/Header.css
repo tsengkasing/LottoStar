@@ -1,6 +1,10 @@
 .header__background {
     border-bottom: 3px solid #66CCFF;
     margin: 0 0 16px 0;
+    background: rgba(51, 51, 51, 0.36);
+    z-index: 0;
+
+    position: relative;
 }
 
 .header-menu-container {
@@ -51,8 +55,27 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
+    z-index: 10;
+}
+
+.header__background:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url(http://message.bilibili.com/img/infocenterbg.jpg) center top no-repeat fixed;
+    filter: blur(6px);
+    margin: 0;
+    overflow: hidden;
 }
 
 .header__search__btn {
     margin: 0 0 0 8px;
+}
+
+.header__search input {
+    color: white !important;
 }
