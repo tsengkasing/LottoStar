@@ -22,6 +22,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 
+import API from '../API';
 import TipsDialog from '../TipsDialog';
 import './Pay.css';
 
@@ -31,7 +32,7 @@ const mock = [{
     current_paid_user_count: 2107,
     max_payable_user_count: 2990,
 
-    price: 12000,
+    amount: 12000,
     unit_price: 2,
     join_count: 1,
 },{
@@ -40,7 +41,7 @@ const mock = [{
     current_paid_user_count: 2107,
     max_payable_user_count: 2990,
 
-    price: 12000,
+    amount: 12000,
     unit_price: 2,
     join_count: 1,
 }];
@@ -86,11 +87,11 @@ export default class Pay extends React.Component {
         if(this.state.selected instanceof Array) {
             for(let index of this.state.selected) {
                 let item = this.state.cart_items[index];
-                sum += item.unit_price * item.join_count;
+                sum += item.amount * item.join_count;
             }
         }else if(this.state.selected === 'all') {
             for(let item of this.state.cart_items) {
-                sum += item.unit_price * item.join_count;
+                sum += item.amount * item.join_count;
             }
         }
        return sum;
@@ -126,6 +127,95 @@ export default class Pay extends React.Component {
 
     handleRedirect = () => {
         this.setState({redirect: '/'});
+    };
+
+    componentDidMount() {
+        this.handleLoadCartItems();
+    }
+
+    handleLoadCartItems = () => {
+        fetch(API.Cart + '?user_id=' + API.UserId, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json',
+                'Content-Type': 'X-WWW-FORM-URLENCODED',
+                'Authorization': 'Bearer ' + API.AccessToken
+            })
+        }).then((response) => {
+            if(response.status === 200) return response.json();
+            else return {__status: response.status};
+        }).then((data) => {
+            if(data && data.__status) {
+                if(data.__status === 401) {
+                    API.refreshToken((err)=>{
+                        if(err) {
+                            window.__clear();
+                            this.refs['dialog'].handleOpen('失败', err);
+                        }
+                        else this.refs['dialog'].handleOpen('失败', '请重试');
+                    });
+                }else if(data.__status >= 500) {
+                    console.error('服务器故障~');
+                }
+            }
+            else {
+                //加载成功
+                this.setState({cart_items: data.Content});
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！', e);
+        });
+    };
+
+    handleRemoveItem = async (item_id) => {
+        await fetch(API.RemoveFromCart + `?user_remove_count=${1}&user_id=${API.UserId}&lottery_record_id=${item_id}`, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json',
+                'Content-Type': 'X-WWW-FORM-URLENCODED',
+                'Authorization': 'Bearer ' + API.AccessToken
+            })
+        }).then((response) => {
+            if(response.status === 200) {
+                //删除成功
+                this.handleLoadCartItems();
+                this.refs['dialog'].handleOpen('成功', '移除商品成功');
+            }else if(response.status >= 500) {
+                console.error('服务器故障~');
+                this.refs['dialog'].handleOpen('失败', '服务器故障');
+            }else if(response.status === 401) {
+                API.refreshToken((err)=>{
+                    if(err) {
+                        window.__clear();
+                        this.refs['dialog'].handleOpen('失败', err);
+                    }
+                    else this.refs['dialog'].handleOpen('失败', '请重试');
+                });
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！', e);
+        });
+    };
+
+    handleRemoveItems = async () => {
+        let to_remove = [];
+        if(this.state.selected instanceof Array) {
+            for(let index of this.state.selected) {
+                to_remove.push(this.state.cart_items[index].id_lottery_record);
+            }
+        }else if(this.state.selected === 'all') {
+            for(let item of this.state.cart_items) {
+                to_remove.push(item.id_lottery_record);
+            }
+        }
+
+        for(let item_id of to_remove) {
+            await this.handleRemoveItem(item_id);
+        }
     };
 
     render() {
@@ -174,12 +264,12 @@ export default class Pay extends React.Component {
                                                     </div>
                                                 </div>
                                             </TableRowColumn>
-                                            <TableRowColumn style={center}>{item.price}</TableRowColumn>
-                                            <TableRowColumn style={center}>{item.unit_price} 代币</TableRowColumn>
+                                            <TableRowColumn style={center}>￥{item.max_payable_user_count}</TableRowColumn>
+                                            <TableRowColumn style={center}>{item.amount} 代币</TableRowColumn>
                                             <TableRowColumn style={center}>{item.join_count}</TableRowColumn>
-                                            <TableRowColumn style={center}>{item.unit_price * item.join_count} 代币</TableRowColumn>
+                                            <TableRowColumn style={center}>{item.amount * item.join_count} 代币</TableRowColumn>
                                             <TableRowColumn style={center}>
-                                                <FlatButton label="删除"/>
+                                                <FlatButton label="删除" onTouchTap={() => this.handleRemoveItem(item.id_lottery_record)} />
                                             </TableRowColumn>
                                         </TableRow>
                                     ))}
@@ -188,7 +278,7 @@ export default class Pay extends React.Component {
                                     <TableRow>
                                         <TableRowColumn>
                                             <div className="pay__cart__table__footer">
-                                                <RaisedButton label="删除选中商品" secondary={true} />
+                                                <RaisedButton label="删除选中商品" secondary={true} onTouchTap={this.handleRemoveItems} />
                                                 <p style={{margin: '0 8px 0 0'}}>合计：<span style={{color: 'red'}}>{this.getSum()}</span> 金币</p>
                                             </div>
                                         </TableRowColumn>

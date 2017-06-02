@@ -11,14 +11,22 @@ export default class API {
     static AccessToken = '';
     static RefreshToken = '';
 
+    static UserId = '';
+
     //账户
     static Token = prefix + '/token';
     static Register = prefix + '/Account/Register';
 
     static UserInfo = prefix + '/account/';
 
+    //买买买
+    static AddToCart = prefix + '/cart/add';
+    static Cart = prefix + '/cart';
+    static RemoveFromCart = prefix + '/cart/remove';
 
     //商品
+    static HotLottery = prefix + '/sexylottery';
+    static AllLottery = prefix + '/lottery';
     static Ware = prefix + '/ware';
 
 

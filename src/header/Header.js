@@ -78,6 +78,8 @@ export default class Header extends React.Component {
                                                         onClick={() =>this.handleSign(false)}>免费注册</div> : null}
                             {this.state.to_login ? null : <div className="header-menu-item">
                                 <Link className="link" to="/home">{this.state.username}</Link></div>}
+                            {this.state.to_login ? null : <div className="header-menu-item">
+                                <Link className="link" to="/pay">购物车</Link></div>}
                             {this.state.to_login ? null : <div className="header-menu-item"
                                                                onClick={this.handleSignOut}>注销</div>}
                         </div>

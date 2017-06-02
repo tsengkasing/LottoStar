@@ -15,7 +15,7 @@
 }
 
 .pay__tab {
-    overflow: hidden;
+    overflow: auto;
     transition: all .3s ease;
 }
 

@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 
 import 'whatwg-fetch';
 
+import HomeInfoGetter from '../../home/HomeInfoGetter';
 import TipsDialog from '../../TipsDialog';
 import Auth from '../../Auth';
 import API from '../../API';
@@ -151,11 +152,15 @@ export default class Sign extends React.Component {
             }
             else {
                 //登录成功
-                Auth.storeUserInfo(Object.assign({username: username, password: password}, data));
-                API.AccessToken = data.access_token;
-                API.RefreshToken = data.refresh_token;
-                this.props.success();
-                this.handleClose();
+                HomeInfoGetter.getUserInfo(username).then((info)=>{
+                    Auth.storeUserInfo(Object.assign({username: username, password: password}, data, info));
+                    API.AccessToken = data.access_token;
+                    API.RefreshToken = data.refresh_token;
+                    API.UserId = info.iduser_account;
+
+                    this.props.success();
+                    this.handleClose();
+                });
             }
         }).catch((e) => {
             console.error('登录失败！');

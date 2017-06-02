@@ -30,16 +30,21 @@ export default class Main extends React.Component {
         super(props);
         this.state = {
             redirect: null,
+            __timer: 0,
+
+            hot_items_buttons: new Array(8).fill(false),
 
             hot_items: new Array(8).fill({
                 ware_id: 1,
-                img_url: 'http://img.everstar.xyz/s/novemser.jpg',
                 ware_name: 'Novemser 个人写真',
+                img_url: 'http://img.everstar.xyz/s/novemser.jpg',
                 max_payable_user_count: 2900,
                 current_paid_user_count: 939,
             }),
 
             lotto_items: items,
+
+            all_items_buttons: new Array(10).fill(false),
 
             all_items: new Array(10).fill({
                 ware_id: 2,
@@ -51,8 +56,8 @@ export default class Main extends React.Component {
         }
     }
 
-    handleLoadWares = () => {
-        fetch(API.Ware, {
+    handleLoadHotLottery = () => {
+        fetch(API.HotLottery, {
             method: 'GET',
             redirect: 'manual',
             cache: 'no-cache',
@@ -79,21 +84,73 @@ export default class Main extends React.Component {
             }
             else {
                 //加载成功
-                console.log(data);
+                this.setState({ hot_items: data });
             }
         }).catch((e) => {
             console.error('获取数据失败！');
         });
     };
 
-    handleLotto = (ware_id) => {
+    handleLoadAllLottery = () => {
+        fetch(API.AllLottery, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json'
+            })
+        }).then((response) => {
+            if(response.status === 200) return response.json();
+            else return {__status: response.status};
+        }).then((data) => {
+            if(data && data.__status && data.__status >= 500) {
+                console.error('服务器故障~');
+                this.refs['dialog'].handleOpen('失败', '服务器故障');
+            }
+            else {
+                //加载成功
+                this.setState({ all_items: data, all_items_buttons: new Array(data.length).fill(false) });
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！');
+        });
+    };
+
+    handleLotto = (ware_id, index, all) => {
         //加到购物车
-        //...
 
         if(!Auth.getLoginStatus()) {
             this.refs['dialog'].handleOpen('成为乐透星的第一步', '请先登录：）');
-        }else
-            this.handleRedirect(0);
+            return;
+        }
+
+        //等待动画 晃动按钮
+        let { hot_items_buttons, all_items_buttons } = this.state;
+        if(all)
+            all_items_buttons[index] = true;
+        else
+            hot_items_buttons[index] = true;
+        this.setState({hot_items_buttons, all_items_buttons});
+
+        fetch(API.AddToCart + `?user_paid_count=1&user_id=${API.UserId}&lottery_record_id=${ware_id}`, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json',
+                'Authorization': 'Bearer ' + API.AccessToken
+            })
+        }).then((response) => {
+            if(response.status === 200) {
+                //添加成功
+                this.handleRedirect(0);
+            }else if(response.status >= 500) {
+                console.error('服务器故障~');
+                this.refs['dialog'].handleOpen('失败', '服务器故障');
+            }
+        }).catch(() => {
+            console.error('获取数据失败！');
+        });
     };
 
     handleRedirect = (target, id) => {
@@ -106,19 +163,21 @@ export default class Main extends React.Component {
         this.setState({ redirect });
     };
 
-    componentWillMount() {
-        this.handleLoadWares();
+    componentDidMount() {
+        this.handleLoadHotLottery();
+        this.handleLoadAllLottery();
 
-        window.__timer = setInterval(()=>{
-            let lotto_items = this.state.lotto_items;
-            lotto_items = lotto_items.slice(1).concat(lotto_items.slice(0, 1));
-            this.setState({lotto_items});
-            console.log('...');
-        }, 3000);
+        this.setState({
+            __timer: setInterval(()=>{
+                let lotto_items = this.state.lotto_items;
+                lotto_items = lotto_items.slice(1).concat(lotto_items.slice(0, 1));
+                this.setState({lotto_items});
+            }, 3000)
+        });
     }
 
     componentWillUnmount() {
-        clearInterval(window.__timer);
+        clearInterval(this.state.__timer);
     }
 
     render() {
@@ -130,11 +189,11 @@ export default class Main extends React.Component {
                         <div className="main__items">
                             {this.state.hot_items.map((item, index)=>(
                                 <div className="main__item main__item__ware" key={index}>
-                                    <div style={{textAlign: 'center'}} onClick={() => this.handleRedirect(1, item.ware_id)}>
+                                    <div className="item-pic-border" onClick={() => this.handleRedirect(1, item.ware_id)}>
                                         <img className="item-pic" src={item.img_url} alt="" />
                                     </div>
                                     <div className="main__item__info" onClick={() => this.handleRedirect(1, item.ware_id)}>
-                                        <p style={{lineHeight: '26px', margin: 0}}>{item.ware_name}</p>
+                                        <p className="item__name">{item.ware_name}</p>
                                         <p className="text-grey-color text-p-min-margin">总需：{item.max_payable_user_count} 人次</p>
                                         <div>
                                             <LinearProgress mode="determinate" value={item.current_paid_user_count} max={item.max_payable_user_count} min={0} />
@@ -150,8 +209,9 @@ export default class Main extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="main__item__btn">
-                                        <RaisedButton label="乐透" secondary={true} buttonStyle={{width: 160}} onTouchTap={() =>this.handleLotto(item.ware_id)}/>
+                                    <div className={`main__item__btn ${this.state.hot_items_buttons[index] ? 'shake' : ''}`}>
+                                        <RaisedButton label="乐透" secondary={true} buttonStyle={{width: 160}}
+                                                      onTouchTap={() =>this.handleLotto(item.id_lottery_record, index)}/>
                                     </div>
                                 </div>
                             ))}
@@ -186,12 +246,12 @@ export default class Main extends React.Component {
                     <div className="subHeader">所有商品</div>
                     <div className="main__items">
                         {this.state.all_items.map((item, index)=>(
-                            <div className="main__item--all main__item__ware" key={index}>
-                                <div style={{textAlign: 'center'}} onClick={() => this.handleRedirect(1, item.ware_id)}>
+                            <div className="main__item main__item__ware" style={{width: 230}} key={index}>
+                                <div className="item-pic-border" onClick={() => this.handleRedirect(1, item.ware_id)}>
                                     <img className="item-pic" src={item.img_url} alt="商品图片" />
                                 </div>
                                 <div className="main__item__info" onClick={() => this.handleRedirect(1, item.ware_id)}>
-                                    <p style={{lineHeight: '26px', margin: 0}}>{item.ware_name}</p>
+                                    <p className="item__name">{item.ware_name}</p>
                                     <p className="text-grey-color text-p-min-margin">总需：{item.max_payable_user_count} 人次</p>
                                     <div>
                                         <LinearProgress mode="determinate" value={item.current_paid_user_count} max={item.max_payable_user_count} min={0} />
@@ -207,8 +267,9 @@ export default class Main extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="main__item__btn">
-                                    <RaisedButton label="乐透" secondary={true} buttonStyle={{width: 160}} onTouchTap={() =>this.handleLotto(item.ware_id)}/>
+                                <div className={`main__item__btn ${this.state.all_items_buttons[index] ? 'shake' : ''}`}>
+                                    <RaisedButton label="乐透" secondary={true} buttonStyle={{width: 160}}
+                                                  onTouchTap={() =>this.handleLotto(item.id_lottery_record, index, true)}/>
                                 </div>
                             </div>
                         ))}

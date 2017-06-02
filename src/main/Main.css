@@ -35,22 +35,33 @@
     border: 1px solid #e8e8e8;
     padding: 8px;
     overflow: hidden;
+    height: 460px;
 }
 
 .main__item__ware:hover {
     animation: tada 0.8s both;
 }
 
-.main__item--all {
-    width: 230px;
-    border: 1px solid #e8e8e8;
-    padding: 8px;
-    overflow: hidden;
-}
-
 .main__item:hover, .main__item--all:hover {
     padding: 7px;
     border: 2px solid #66CCFF;
+}
+
+.item__name {
+    line-height: 26px;
+    margin: 0;
+    height: 52px;
+    overflow: hidden;
+}
+
+.item-pic-border {
+    text-align: center;
+    height: 240px;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .item-pic {
@@ -102,7 +113,7 @@
     overflow: hidden;
     border: 1px solid #ddd;
     border-bottom: 0;
-    max-height: 692px;
+    max-height: 919px;
     transition: all .3s ease;
 }
 
@@ -171,4 +182,22 @@
     to {
         transform: scale3d(1, 1, 1);
     }
+}
+
+@keyframes shake {
+    from, to {
+        transform: translate3d(0, 0, 0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate3d(-10px, 0, 0);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translate3d(10px, 0, 0);
+    }
+}
+
+.shake {
+    animation: shake 1s infinite;
 }
