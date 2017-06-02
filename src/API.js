@@ -23,11 +23,12 @@ export default class API {
     static AddToCart = prefix + '/cart/add';
     static Cart = prefix + '/cart';
     static RemoveFromCart = prefix + '/cart/remove';
+    static ClearingCart = prefix + '/cart/buy';
 
     //商品
     static HotLottery = prefix + '/sexylottery';
     static AllLottery = prefix + '/lottery';
-    static Ware = prefix + '/ware';
+    static DetailedLottery = prefix + '/lottery';
 
 
 

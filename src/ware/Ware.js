@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 
+import API from '../API';
 import Auth from '../Auth';
 import TipsDialog from '../TipsDialog';
 import './Ware.css';
@@ -65,6 +66,31 @@ export default class Ware extends React.Component {
     };
 
     handleRedirect = () => {this.setState({redirect: '/pay'})};
+
+
+    handleLoadLotteryInfo = () => {
+        fetch(API.DetailedLottery + '/' + this.state.ware_id, {
+            method: 'GET',
+            headers: new Headers({
+                'dataType': 'json',
+                'Content-Type': 'X-WWW-FORM-URLENCODED'
+            })
+        }).then((response) => {
+            if(response.status === 200) {
+                //加载成功
+
+            }else if(response.status >= 500) {
+                console.error('服务器故障~');
+                this.refs['dialog'].handleOpen('失败', '服务器故障');
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！', e);
+        });
+    };
+
+    componentDidMount() {
+        this.handleLoadLotteryInfo();
+    }
 
     render() {
         return (

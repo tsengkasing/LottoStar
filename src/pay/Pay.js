@@ -22,6 +22,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 
+import Auth from '../Auth';
 import API from '../API';
 import TipsDialog from '../TipsDialog';
 import './Pay.css';
@@ -87,11 +88,11 @@ export default class Pay extends React.Component {
         if(this.state.selected instanceof Array) {
             for(let index of this.state.selected) {
                 let item = this.state.cart_items[index];
-                sum += item.amount * item.join_count;
+                sum += item.amount;
             }
         }else if(this.state.selected === 'all') {
             for(let item of this.state.cart_items) {
-                sum += item.amount * item.join_count;
+                sum += item.amount;
             }
         }
        return sum;
@@ -112,14 +113,49 @@ export default class Pay extends React.Component {
         })
     };
 
-    handlePay = () => {
+    handlePay = async () => {
         const password = this.state.password;
         if(!password || password === '') {
-            this.setState({
-                password_error: '密码不能为空：）'
-            });
+            this.setState({ password_error: '密码不能为空：）' });
+            return;
+        }else if(password !== Auth.getUserInfo().password) {
+            this.setState({ password_error: '密码错误' });
             return;
         }
+
+        await fetch(API.ClearingCart + `?userId=${API.UserId}&lotteryId={lotteryId[0]}&lotteryId={lotteryId[1]}`, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json',
+                'Content-Type': 'X-WWW-FORM-URLENCODED',
+                'Authorization': 'Bearer ' + API.AccessToken
+            })
+        }).then((response) => {
+            if(response.status === 200) return response.json();
+            else return {__status: response.status};
+        }).then((data) => {
+            if(data && data.__status) {
+                if(data.__status === 401) {
+                    API.refreshToken((err)=>{
+                        if(err) {
+                            window.__clear();
+                            this.refs['dialog'].handleOpen('失败', err);
+                        }
+                        else this.refs['dialog'].handleOpen('失败', '请重试');
+                    });
+                }else if(data.__status >= 500) {
+                    console.error('服务器故障~');
+                }
+            }
+            else {
+                //加载成功
+                this.setState({cart_items: data.Content});
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！', e);
+        });
 
         this.handleNext();
         console.log('支付啦');
@@ -169,8 +205,8 @@ export default class Pay extends React.Component {
         });
     };
 
-    handleRemoveItem = async (item_id) => {
-        await fetch(API.RemoveFromCart + `?user_remove_count=${1}&user_id=${API.UserId}&lottery_record_id=${item_id}`, {
+    handleRemoveItem = async (item_id, amount, reload) => {
+        await fetch(API.RemoveFromCart + `?user_remove_count=${amount}&user_id=${API.UserId}&lottery_record_id=${item_id}`, {
             method: 'GET',
             redirect: 'manual',
             cache: 'no-cache',
@@ -182,7 +218,7 @@ export default class Pay extends React.Component {
         }).then((response) => {
             if(response.status === 200) {
                 //删除成功
-                this.handleLoadCartItems();
+                if(reload) this.handleLoadCartItems();
                 this.refs['dialog'].handleOpen('成功', '移除商品成功');
             }else if(response.status >= 500) {
                 console.error('服务器故障~');
@@ -205,17 +241,20 @@ export default class Pay extends React.Component {
         let to_remove = [];
         if(this.state.selected instanceof Array) {
             for(let index of this.state.selected) {
-                to_remove.push(this.state.cart_items[index].id_lottery_record);
+                let { id_lottery_record, amount } = this.state.cart_items[index];
+                to_remove.push({ id_lottery_record, amount});
             }
         }else if(this.state.selected === 'all') {
             for(let item of this.state.cart_items) {
-                to_remove.push(item.id_lottery_record);
+                let { id_lottery_record, amount } = item;
+                to_remove.push({ id_lottery_record, amount });
             }
         }
 
-        for(let item_id of to_remove) {
-            await this.handleRemoveItem(item_id);
+        for(let item of to_remove) {
+            await this.handleRemoveItem(item.id_lottery_record, item.amount, false);
         }
+        this.handleLoadCartItems();
     };
 
     render() {
@@ -265,11 +304,11 @@ export default class Pay extends React.Component {
                                                 </div>
                                             </TableRowColumn>
                                             <TableRowColumn style={center}>￥{item.max_payable_user_count}</TableRowColumn>
+                                            <TableRowColumn style={center}>1 代币</TableRowColumn>
+                                            <TableRowColumn style={center}>×{item.amount}</TableRowColumn>
                                             <TableRowColumn style={center}>{item.amount} 代币</TableRowColumn>
-                                            <TableRowColumn style={center}>{item.join_count}</TableRowColumn>
-                                            <TableRowColumn style={center}>{item.amount * item.join_count} 代币</TableRowColumn>
                                             <TableRowColumn style={center}>
-                                                <FlatButton label="删除" onTouchTap={() => this.handleRemoveItem(item.id_lottery_record)} />
+                                                <FlatButton label="删除" onTouchTap={() => this.handleRemoveItem(item.id_lottery_record, item.amount, true)} />
                                             </TableRowColumn>
                                         </TableRow>
                                     ))}
