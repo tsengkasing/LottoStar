@@ -11,7 +11,7 @@ But this repository only hold the front end part.
 
 ## Usage
 
-It's recommended using cnpm to install packages faster in china.
+It's recommended using cnpm to install packages faster in China.
 
 ```
 npm install
