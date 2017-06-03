@@ -65,7 +65,7 @@ export default class API {
                 cb && cb(null);
             }
         }).catch((e) => {
-            console.error('更新Token失败！');
+            console.error('更新Token失败！', e);
         });
     }
 

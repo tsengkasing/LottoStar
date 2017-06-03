@@ -110,9 +110,20 @@ export default class Manage extends React.Component {
     };
 
     handleAddItem = async () => {
-        try {
+        let to_add = [];
+        if(Array.isArray(this.state.selected)) {
             for(let index of this.state.selected) {
-                await this.lottery(this.state.wares[index].id_ware);
+                to_add.push(this.state.wares[index].id_ware);
+            }
+        }else if(this.state.selected === 'all') {
+            for(let item of this.state.wares) {
+                to_add.push(item.id_ware);
+            }
+        }
+
+        try {
+            for(let ware_id of to_add) {
+                await this.lottery(ware_id);
             }
             this.refs['dialog'].handleOpen('成功', '上架成功');
         }catch(e) {
@@ -123,8 +134,10 @@ export default class Manage extends React.Component {
     };
 
     handleToCreateLottery = () => {
-        this.handleLoadWares(this.state.current_page);
-        this.setState({to_create: true});
+        this.setState({
+            to_create: true,
+            current_page: 0
+        }, ()=>this.handleLoadWares(this.state.current_page));
     };
 
     handlePrevPage = () => {
@@ -218,7 +231,7 @@ export default class Manage extends React.Component {
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderColumn colSpan="1" style={center}>商品ID</TableHeaderColumn>
-                                    <TableHeaderColumn colSpan="2">商品缩略图</TableHeaderColumn>
+                                    <TableHeaderColumn colSpan="1">商品缩略图</TableHeaderColumn>
                                     <TableHeaderColumn colSpan="2">商品名称</TableHeaderColumn>
                                     <TableHeaderColumn colSpan="1" style={center}>商品价值</TableHeaderColumn>
                                 </TableRow>
@@ -227,7 +240,7 @@ export default class Manage extends React.Component {
                                 {this.state.wares.map((item, index) => (
                                     <TableRow key={index} selected={this.state.selected.includes(index)}>
                                         <TableRowColumn colSpan="1" style={center}>{item.id_ware}</TableRowColumn>
-                                        <TableRowColumn colSpan="2">
+                                        <TableRowColumn colSpan="1">
                                             <div className="manage__ware__img__border">
                                                 <img className="manage__ware__img" alt="找不到图片" src={item.thumbnail_url} />
                                             </div>
