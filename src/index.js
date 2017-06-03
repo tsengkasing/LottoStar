@@ -44,14 +44,14 @@ class App extends React.Component {
             toLogin: true
         };
 
+        this.handleRefreshStatus();
+    }
+
+    handleRefreshStatus = () => {
         const _info = Auth.getUserInfo();
         API.AccessToken = _info.access_token;
         API.RefreshToken = _info.refresh_token;
         API.UserId = _info.iduser_account;
-    }
-
-    handleRefreshStatus = () => {
-
     };
 
 

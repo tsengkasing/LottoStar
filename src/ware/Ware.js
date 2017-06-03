@@ -76,12 +76,16 @@ export default class Ware extends React.Component {
                 'Content-Type': 'X-WWW-FORM-URLENCODED'
             })
         }).then((response) => {
-            if(response.status === 200) {
-                //加载成功
-
-            }else if(response.status >= 500) {
+            if(response.status === 200) return response.json();
+            else return {__status: response.status};
+        }).then((data) => {
+            if(data && data.__status && data.__status >= 500) {
                 console.error('服务器故障~');
                 this.refs['dialog'].handleOpen('失败', '服务器故障');
+            }
+            else {
+                //加载成功
+                this.setState(data);
             }
         }).catch((e) => {
             console.error('获取数据失败！', e);
@@ -122,13 +126,12 @@ export default class Ware extends React.Component {
                                     <span>剩余人次{this.state.max_payable_user_count - this.state.current_paid_user_count}</span>
                                 </div>
                             </div>
-                            <span style={{width: 128, margin: '0 16px'}}>已完成 {this.state.max_payable_user_count / this.state.current_paid_user_count} %</span>
+                            <span style={{width: 128, margin: '0 16px'}}>已完成 {this.state.current_paid_user_count / this.state.max_payable_user_count} %</span>
                         </div>
 
                         <div className="ware__pay">
                             <TextField
                                 type="number"
-                                defaultValue="1"
                                 floatingLabelText="参与人次"
                                 onChange={this.handleInput}
                                 value={this.state.join_price}

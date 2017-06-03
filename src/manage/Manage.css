@@ -19,6 +19,29 @@
     text-align: center !important;
 }
 
+.manage__ware__img__border {
+    width: 100%;
+    height: 128px;
+    padding: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.manage__ware__img {
+    max-height: 100%;
+    max-width: 100%;
+    text-align: center;
+}
+
+.manage__table__footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px;
+}
+
 .manage__add__btn {
     position: fixed;
     bottom: 0;
@@ -29,12 +52,7 @@
 .manage__add__border {
     transition: all .4s ease;
     margin: 16px 0;
-    padding: 0 32px;
     overflow: hidden;
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .manage__delete--animated {

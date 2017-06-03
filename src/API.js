@@ -29,8 +29,12 @@ export default class API {
     static HotLottery = prefix + '/sexylottery';
     static AllLottery = prefix + '/lottery';
     static DetailedLottery = prefix + '/lottery';
+    static RecentWinners = prefix + '/lottery/winners';
 
 
+    //管理员
+    static AllWares = prefix + '/ware';
+    static Lottery = prefix + '/lottery';
 
     static refreshToken(cb) {
         fetch(API.Token, {

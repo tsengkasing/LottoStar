@@ -55,11 +55,13 @@ export default class Pay extends React.Component {
             redirect: null,
 
             selected: [],
+            sum: 0,
 
             finished: false,
             step_index: 0,
 
             cart_items: mock,
+            selected_items_ids: [],
 
             password: '',
             password_error: null
@@ -67,10 +69,11 @@ export default class Pay extends React.Component {
     }
 
     handleNext = () => {
-        const {step_index} = this.state;
+        const {step_index, sum} = this.state;
+        this.__sum = sum;
         this.setState({
             step_index: step_index + 1,
-            finished: step_index >= 2,
+            finished: step_index >= 2
         });
     };
 
@@ -81,7 +84,7 @@ export default class Pay extends React.Component {
         }
     };
 
-    handleSelect = (selected) => {this.setState({selected})};
+    handleSelect = (selected) => {this.setState({selected}, ()=>this.getSum())};
 
     getSum = () => {
         let sum = 0;
@@ -95,15 +98,28 @@ export default class Pay extends React.Component {
                 sum += item.amount;
             }
         }
-       return sum;
+        this.setState({sum});
     };
 
     handleClearing = () => {
-        const sum = this.getSum();
+        const sum = this.state.sum;
         if(sum <= 0) {
             this.refs['dialog'].handleOpen('遇到了问题', '你未勾选任意商品');
-        }else
+        }else {
+            let selected_items_ids = [];
+            if(this.state.selected instanceof Array) {
+                for(let index of this.state.selected) {
+                    let item = this.state.cart_items[index];
+                    selected_items_ids.push(item.id_lottery_record);
+                }
+            }else if(this.state.selected === 'all') {
+                for(let item of this.state.cart_items) {
+                    selected_items_ids.push(item.id_lottery_record);
+                }
+            }
+            this.setState({selected_items_ids});
             this.handleNext();
+        }
     };
 
     handleInputPassword = (event) => {
@@ -123,7 +139,12 @@ export default class Pay extends React.Component {
             return;
         }
 
-        await fetch(API.ClearingCart + `?userId=${API.UserId}&lotteryId={lotteryId[0]}&lotteryId={lotteryId[1]}`, {
+        let params = `?userId=${API.UserId}`;
+        for(let id of this.state.selected_items_ids) {
+            params += '&lotteryId=' + id;
+        }
+
+        await fetch(API.ClearingCart + params, {
             method: 'GET',
             redirect: 'manual',
             cache: 'no-cache',
@@ -150,15 +171,24 @@ export default class Pay extends React.Component {
                 }
             }
             else {
-                //加载成功
-                this.setState({cart_items: data.Content});
+                let success = true, error = '';
+                for(let msg of data) {
+                    if(msg['Error']) {
+                        success = false;
+                        error += msg['Error'] + '\n';
+                    }
+                }
+                if(success) {
+                    //购买成功
+                    this.handleNext();
+                }else {
+                    this.refs['dialog'].handleOpen('部分商品购买失败', error);
+                    this.handlePrev();
+                }
             }
         }).catch((e) => {
             console.error('获取数据失败！', e);
         });
-
-        this.handleNext();
-        console.log('支付啦');
     };
 
     handleRedirect = () => {
@@ -318,7 +348,7 @@ export default class Pay extends React.Component {
                                         <TableRowColumn>
                                             <div className="pay__cart__table__footer">
                                                 <RaisedButton label="删除选中商品" secondary={true} onTouchTap={this.handleRemoveItems} />
-                                                <p style={{margin: '0 8px 0 0'}}>合计：<span style={{color: 'red'}}>{this.getSum()}</span> 金币</p>
+                                                <p style={{margin: '0 8px 0 0'}}>合计：<span style={{color: 'red'}}>{this.state.sum}</span> 金币</p>
                                             </div>
                                         </TableRowColumn>
                                     </TableRow>
@@ -334,7 +364,7 @@ export default class Pay extends React.Component {
                         </div>
                         <div className={`pay__tab vertical__center pay__tab--${this.state.step_index === 1 ? 'active' : 'deactive'}`}>
                             <div style={{textAlign: 'center', margin: 32}}>
-                                总需支付： <span style={{color: 'red'}}>{this.getSum()}</span> 金币
+                                总需支付： <span style={{color: 'red'}}>{this.__sum}</span> 金币
                             </div>
                             <div className="pay__input__password">
                                 <TextField

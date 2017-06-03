@@ -15,11 +15,11 @@ let items = [];
 for(let i = 0; i < 20; i++) {
     let ran = Math.random();
     items.push({
-        user_avatar_url: `http://img.everstar.xyz/${ran > 0.5 ? 'everstar.jpg' : 'novemser.jpg'}` ,
+        avatar_url: `http://img.everstar.xyz/${ran > 0.5 ? 'everstar.jpg' : 'novemser.jpg'}` ,
         user_name: 'everstar',
         date: '2017-05-19',
         ware_name: 'Novemser 个人写真' + ran.toFixed(2),
-        current_paid_user_count: (ran * 100).toFixed(0),
+        user_paid: (ran * 100).toFixed(0),
         max_payable_user_count: (ran * 10000).toFixed(0)
     });
 }
@@ -116,6 +116,31 @@ export default class Main extends React.Component {
         });
     };
 
+    handleLoadWinners = () => {
+        fetch(API.RecentWinners, {
+            method: 'GET',
+            redirect: 'manual',
+            cache: 'no-cache',
+            headers: new Headers({
+                'dataType': 'json'
+            })
+        }).then((response) => {
+            if(response.status === 200) return response.json();
+            else return {__status: response.status};
+        }).then((data) => {
+            if(data && data.__status && data.__status >= 500) {
+                console.error('服务器故障~');
+                this.refs['dialog'].handleOpen('失败', '服务器故障');
+            }
+            else {
+                //加载成功
+                this.setState({ lotto_items: data });
+            }
+        }).catch((e) => {
+            console.error('获取数据失败！', e);
+        });
+    };
+
     handleLotto = (ware_id, index, all) => {
         //加到购物车
 
@@ -166,12 +191,12 @@ export default class Main extends React.Component {
     componentDidMount() {
         this.handleLoadHotLottery();
         this.handleLoadAllLottery();
+        this.handleLoadWinners();
 
         this.setState({
             __timer: setInterval(()=>{
                 let lotto_items = this.state.lotto_items;
-                lotto_items = lotto_items.slice(1).concat(lotto_items.slice(0, 1));
-                this.setState({lotto_items});
+                this.setState({lotto_items: lotto_items.slice(1).concat(lotto_items.slice(0, 1))});
             }, 3000)
         });
     }
@@ -189,10 +214,10 @@ export default class Main extends React.Component {
                         <div className="main__items">
                             {this.state.hot_items.map((item, index)=>(
                                 <div className="main__item main__item__ware" key={index}>
-                                    <div className="item-pic-border" onClick={() => this.handleRedirect(1, item.ware_id)}>
+                                    <div className="item-pic-border" onClick={() => this.handleRedirect(1, item.id_lottery_record)}>
                                         <img className="item-pic" src={item.img_url} alt="" />
                                     </div>
-                                    <div className="main__item__info" onClick={() => this.handleRedirect(1, item.ware_id)}>
+                                    <div className="main__item__info" onClick={() => this.handleRedirect(1, item.id_lottery_record)}>
                                         <p className="item__name">{item.ware_name}</p>
                                         <p className="text-grey-color text-p-min-margin">总需：{item.max_payable_user_count} 人次</p>
                                         <div>
@@ -222,14 +247,14 @@ export default class Main extends React.Component {
                         <div className="latest-lotto-items">
                             {this.state.lotto_items.map((item, index) => (
                                 <div className="latest-lotto-item" key={index}>
-                                    <img className="latest-lotto-item-pic" src={item.user_avatar_url} alt="头像"/>
+                                    <img className="latest-lotto-item-pic" src={item.avatar_url} alt="头像"/>
                                     <div className="latest-lotto-item-info">
                                         <div className="latest-lotto-item-info-separate">
                                             <div>{item.user_name}</div>
                                             <div>{item.date}</div>
                                         </div>
                                         <div style={{margin: '8px 0 0', overflow: 'hidden', height: 16}}>
-                                            <span style={{color: 'red'}}>{`${item.current_paid_user_count}人次`}</span>
+                                            <span style={{color: 'red'}}>{`${item.user_paid}人次`}</span>
                                             {`乐透中${item.ware_name}`}</div>
                                         <div style={{margin: '8px 0 0'}}>
                                             {`总需：${item.max_payable_user_count} 人次`}
@@ -247,10 +272,10 @@ export default class Main extends React.Component {
                     <div className="main__items">
                         {this.state.all_items.map((item, index)=>(
                             <div className="main__item main__item__ware" style={{width: 230}} key={index}>
-                                <div className="item-pic-border" onClick={() => this.handleRedirect(1, item.ware_id)}>
+                                <div className="item-pic-border" onClick={() => this.handleRedirect(1, item.id_lottery_record)}>
                                     <img className="item-pic" src={item.img_url} alt="商品图片" />
                                 </div>
-                                <div className="main__item__info" onClick={() => this.handleRedirect(1, item.ware_id)}>
+                                <div className="main__item__info" onClick={() => this.handleRedirect(1, item.id_lottery_record)}>
                                     <p className="item__name">{item.ware_name}</p>
                                     <p className="text-grey-color text-p-min-margin">总需：{item.max_payable_user_count} 人次</p>
                                     <div>
