@@ -5,7 +5,7 @@ But this repository only hold the front end part.
 
 ![](https://img.shields.io/badge/React--Router-v4-brightgreen.svg)
 ![](https://img.shields.io/badge/material--ui-need-brightgreen.svg)
-![](https://img.shields.io/badge/Fetch API-need-brightgreen.svg)
+![](https://img.shields.io/badge/FetchAPI-need-brightgreen.svg)
 ![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 
 ![](./public/favicon.ico)
