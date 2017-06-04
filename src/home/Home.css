@@ -1,6 +1,7 @@
 .home-layout {
     display: flex;
     flex-flow: row nowrap;
+    min-height: 810px;
 }
 
 .home__menu {
@@ -23,8 +24,7 @@
 }
 
 .home__content--active {
-    height: 666px;
-    /*overflow: visible !important;*/
+    height: 777px;
 }
 
 .home__content--deactive {
@@ -60,8 +60,8 @@
 }
 
 .home__avatar__hide {
-    width: 140px;
-    height: 140px;
+    height: calc(100% - 24px);
+    width: 100%;
     position: absolute;
     z-index: 999;
     background-color: black;
@@ -82,9 +82,6 @@
 }
 
 .home__avatar {
-    /*width: 140px;*/
-    /*height: 140px;*/
-
     min-width: 140px;
     min-height: 140px;
     max-height: 300px;

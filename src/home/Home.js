@@ -26,38 +26,6 @@ import Auth from '../Auth';
 import './Home.css';
 import HomeInfoGetter from './HomeInfoGetter';
 
-//mock
-const _message = [
-    {
-        message_id: 1,
-        title: '2017限定 粘土人 Novemser, 开启预订！',
-        time: '2017-05-19',
-        content: '2017限定 粘土人 Novemser, 限量预订开启！速来预订',
-        state: 0
-    },
-    {
-        message_id: 2,
-        title: '2017限定 粘土人 Novemser, 开启预订！',
-        time: '2017-05-19',
-        content: '2017限定 粘土人 Novemser, 限量预订开启！速来预订',
-        state: 0
-    },
-    {
-        message_id: 3,
-        title: '2017限定 粘土人 Novemser, 开启预订！',
-        time: '2017-05-19',
-        content: '2017限定 粘土人 Novemser, 限量预订开启！速来预订',
-        state: 1
-    },
-    {
-        message_id: 4,
-        title: '2017限定 粘土人 Novemser, 开启预订！',
-        time: '2017-05-19',
-        content: '2017限定 粘土人 Novemser, 限量预订开启！速来预订',
-        state: 1
-    },
-];
-
 export default class Home extends React.Component {
 
     constructor(props) {
@@ -68,65 +36,49 @@ export default class Home extends React.Component {
             charge_amount: 1,
 
             user_info: {
-                avatar_url: 'http://img.everstar.xyz/everstar.jpg',
-                nick_name: 'Everstar',
+                avatar_url: 'http://img.everstar.xyz/default.jpg',
+                nick_name: 'nobody',
                 iduser_account: '0001',
                 tel_num: '18200000000',
                 balance: 233
             },
 
-            lotto_record: new Array(6).fill({
-                ware_name: 'Novemser 个人写真',
-                img_url: 'http://img.everstar.xyz/s/novemser.jpg',
-                current_paid_user_count: 2107,
-                max_payable_user_count: 2990,
-                user_paid_price: 666,
-                status: '正在进行',
-                time: '2017-05-19'
-            }),
+            lotto_record: [],
 
-            lucky_record: new Array(2).fill({
-                ware_name: 'Novemser 个人写真',
-                img_url: 'http://img.everstar.xyz/s/novemser.jpg',
-                current_paid_user_count: 2107,
-                max_payable_user_count: 2990,
-                status: '已收货',
-            }),
+            lucky_record: [],
 
-            messages: _message,
+            messages: [],
+            unread_count: 0,
 
-            charge_record: new Array(13).fill({
-                time: '2017-05-19',
-                serial_number: '20170519205008249630',
-                money: 666,
-                status: '成功'
-            })
+            charge_record: []
         }
     }
 
-    handleSwitch = (tab) => {
-        this.setState({
-            tab: tab
-        })
-    };
+    handleSwitch = (tab) => this.setState({tab});
 
     handleReadMessage = (message_id, index) => {
 
-        //页面直接修改为已读
-        let messages = this.state.messages;
-        messages[index].state = 1;
-        this.setState({messages});
-
-
         //发送给后台 标记已读
-
+        HomeInfoGetter.UserReadMessages(message_id).then(() => {
+            //页面直接修改为已读
+            let { messages, unread_count} = this.state;
+            messages[index].has_been_read = 1;
+            unread_count--;
+            this.setState({messages, unread_count});
+        });
     };
 
     handleChargeSelect = (event, index, value) => this.setState({charge_amount: value});
 
     handleCharge = () => {
         const amount = this.state.charge_amount;
-        this.refs['tips'].handleOpen('充值成功！', `成功充值￥${amount}`, () => {});
+        HomeInfoGetter.UserCharge(amount).then((record) => {
+            let charge_record = this.state.charge_record.slice();
+            charge_record.push(record);
+            const user_info = Object.assign(this.state.user_info, {balance: record.rest_value});
+            this.setState({charge_record, user_info});
+            this.refs['tips'].handleOpen('充值成功！', `成功充值￥${amount}`);
+        });
     };
 
     loadUserInfo = () => {
@@ -135,8 +87,28 @@ export default class Home extends React.Component {
         });
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.loadUserInfo();
+
+        HomeInfoGetter.getUserOnGoingLottery().then((lotto_record) => {
+            this.setState({lotto_record});
+        });
+
+        HomeInfoGetter.getUserLuckyLottery().then((lucky_record) => {
+            this.setState({lucky_record});
+        });
+
+        HomeInfoGetter.getUserMessages().then((messages) => {
+            let unread_count = 0;
+            for(let message of messages) {
+                if(message.has_been_read === false) unread_count++;
+            }
+            this.setState({messages, unread_count});
+        });
+
+        HomeInfoGetter.getUserChargeRecord().then((charge_record) => {
+            this.setState({charge_record});
+        });
     }
 
     render() {
@@ -149,7 +121,7 @@ export default class Home extends React.Component {
                             <ListItem primaryText="乐透记录" rightIcon={<ActionInfo />} onTouchTap={() => this.handleSwitch(1)}/>
                             <ListItem primaryText="幸运记录" rightIcon={<ActionInfo />} onTouchTap={() => this.handleSwitch(2)}/>
                             <ListItem primaryText="消息通知" rightIcon={<Badge
-                                badgeContent={10}
+                                badgeContent={this.state.unread_count}
                                 primary={true}
                                 badgeStyle={{top: 12, right: 12}}
                                 style={{top: -10, right: -8, margin: 0}}
@@ -168,7 +140,7 @@ export default class Home extends React.Component {
                                     <tbody>
                                         <tr>
                                             <th>头像</th>
-                                            <td><div className="home__avatar__hide"
+                                            <td style={{position: 'relative'}}><div className="home__avatar__hide"
                                                      onClick={()=>{
                                                          this.refs['avatar'].handleOpen(this.state.user_info.iduser_account,
                                                              this.loadUserInfo)
@@ -226,9 +198,9 @@ export default class Home extends React.Component {
                                                     </div>
                                                 </div>
                                             </TableRowColumn>
-                                            <TableRowColumn>{item.user_paid_price}人次</TableRowColumn>
+                                            <TableRowColumn>{item.paid_price}人次</TableRowColumn>
                                             <TableRowColumn>{item.status}</TableRowColumn>
-                                            <TableRowColumn>{item.time}</TableRowColumn>
+                                            <TableRowColumn>{item.paid_time.split('T')[0]}<br/>{item.paid_time.split('T')[1].split('+')[0]}</TableRowColumn>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -240,14 +212,13 @@ export default class Home extends React.Component {
                             <Table>
                                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                                     <TableRow>
-                                        <TableHeaderColumn colSpan="3">商品信息</TableHeaderColumn>
-                                        <TableHeaderColumn>发货状态</TableHeaderColumn>
+                                        <TableHeaderColumn>商品信息</TableHeaderColumn>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody displayRowCheckbox={false}>
                                     {this.state.lucky_record.map((item, index) => (
                                         <TableRow key={index}>
-                                            <TableRowColumn colSpan="3">
+                                            <TableRowColumn>
                                                 <div className="home__record__info">
                                                     <img src={item.img_url} alt="商品图片" />
                                                     <div style={{width: '50%'}}>
@@ -264,7 +235,6 @@ export default class Home extends React.Component {
                                                     </div>
                                                 </div>
                                             </TableRowColumn>
-                                            <TableRowColumn>{item.status}</TableRowColumn>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -276,17 +246,17 @@ export default class Home extends React.Component {
                             <div style={{margin: 16}} className="background__mask--none">
                                 {this.state.messages.map((item, index) => (
                                     <Paper className="home__message__item background__mask" key={index}
-                                           onTouchTap={() => this.handleReadMessage(item.message_id, index)}>
+                                           onTouchTap={() => this.handleReadMessage(item.id_user_message, index)}>
                                         <div>
-                                            <div className={item.state ? 'home__message__item__title--read' : 'home__message__item__title--unread'}>
-                                                {item.title}&nbsp;&nbsp;&nbsp;
-                                                <span style={{fontWeight: 'normal'}} className="text-grey-color">{item.time}</span>
+                                            <div className={item.has_been_read ? 'home__message__item__title--read' : 'home__message__item__title--unread'}>
+                                                {item.msg_title}&nbsp;&nbsp;&nbsp;
+                                                <span style={{fontWeight: 'normal'}} className="text-grey-color">{item.release_time}</span>
                                             </div>
                                             <div>
-                                                <p className="home__message__item__content">{item.content}</p>
+                                                <p className="home__message__item__content">{item.msg_detail}</p>
                                             </div>
                                         </div>
-                                        <div>{item.state ? '已读' : '未读'}</div>
+                                        <div>{item.has_been_read ? '已读' : '未读'}</div>
                                     </Paper>
                                 ))}
                             </div>
@@ -318,17 +288,15 @@ export default class Home extends React.Component {
                                         <TableHeaderColumn>交易号</TableHeaderColumn>
                                         <TableHeaderColumn>金额(元)</TableHeaderColumn>
                                         <TableHeaderColumn>获得代币</TableHeaderColumn>
-                                        <TableHeaderColumn>充值状态</TableHeaderColumn>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody displayRowCheckbox={false}>
                                     {this.state.charge_record.map((item, index) => (
                                         <TableRow key={index}>
-                                            <TableRowColumn>{item.time}</TableRowColumn>
-                                            <TableRowColumn>{item.serial_number}</TableRowColumn>
-                                            <TableRowColumn>{item.money.toFixed(2)}</TableRowColumn>
-                                            <TableRowColumn>{item.money.toFixed(2)}</TableRowColumn>
-                                            <TableRowColumn>{item.status}</TableRowColumn>
+                                            <TableRowColumn>{item.charge_time}</TableRowColumn>
+                                            <TableRowColumn>{item.id_charge_record}</TableRowColumn>
+                                            <TableRowColumn>{item.charge_amount.toFixed(2)}</TableRowColumn>
+                                            <TableRowColumn>{item.charge_amount.toFixed(2)}</TableRowColumn>
                                         </TableRow>
                                     ))}
                                 </TableBody>

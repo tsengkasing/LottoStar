@@ -4,7 +4,7 @@
 import React from 'react';
 import { Link  } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
-import AutoComplete from 'material-ui/AutoComplete';
+// import AutoComplete from 'material-ui/AutoComplete';
 
 import Sign from './sign/Sign';
 import Auth from '../Auth';
@@ -61,7 +61,7 @@ export default class Header extends React.Component {
         // window.location.pathname = '/';
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.handleRefreshStatus();
     }
 
@@ -92,13 +92,13 @@ export default class Header extends React.Component {
                             <span style={{color: 'white', fontSize: 24}}>Lotto Star</span>
                         </Link>
                     </div>
-                    <div className="header__search">
-                        <AutoComplete
-                            hintText={<span style={{color: 'rgba(255, 255, 255, 0.3)'}}>请输入要搜索的商品</span>}
-                            dataSource={this.state.data_source}
-                            onUpdateInput={this.handleUpdateInput}
-                        />
-                    </div>
+                    {/*<div className="header__search">*/}
+                        {/*<AutoComplete*/}
+                            {/*hintText={<span style={{color: 'rgba(255, 255, 255, 0.3)'}}>请输入要搜索的商品</span>}*/}
+                            {/*dataSource={this.state.data_source}*/}
+                            {/*onUpdateInput={this.handleUpdateInput}*/}
+                        {/*/>*/}
+                    {/*</div>*/}
                 </div>
                 <Sign ref="sign" success={this.handleRefreshStatus} />
             </div>

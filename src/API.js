@@ -19,6 +19,14 @@ export default class API {
 
     static UserInfo = prefix + '/account/';
 
+    //个人中心
+    static OnGoing = prefix + '/lottery/ongoing';
+    static LuckyRecord = prefix + '/lottery/win';
+    static Messages = prefix + '/user/message';
+    static ReadMessage = prefix + '/message/read';
+    static ChargeRecord = prefix + '/charge/record';
+    static Charge = prefix + '/charge';
+
     //买买买
     static AddToCart = prefix + '/cart/add';
     static Cart = prefix + '/cart';
